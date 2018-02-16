@@ -9,7 +9,6 @@ from team_path_map import BracketMap    # this allows us to access the data in t
 def weighted_choice(sequence,  weights):
     x = np.random.randint(0,1e8)
     weights = [weight*1e8 for weight in weights]
-
     weights_dict = {el: prob for (el, prob) in zip(sequence, weights)}
 
     place = 0
@@ -30,8 +29,8 @@ path_data = BracketMap()
 # load the data and take only the columns we need.
 all_forecast_data = pd.read_csv('./fivethirtyeight_ncaa_forecasts.csv')
 round_wins_all = all_forecast_data[['rd1_win', 'rd2_win', 'rd3_win', 'rd4_win', 'rd5_win', 'rd6_win', 'rd7_win']]
-round_wins = round_wins_all[137: 200]
-team_names = all_forecast_data['team_name'][137:200]
+round_wins = round_wins_all[136: 200]
+team_names = all_forecast_data['team_name'][136:200]
 round_wins_named = round_wins.set_index(team_names)
 
 
@@ -62,7 +61,6 @@ for i in range(10):
 
         # the probabilites of each of the teams winning in this round
         probabilities = list(round_wins_named['rd{}_win'.format(round)][possible_teams])
-        print('\nGame number = {g} \nProbabilities = {p} \nPossible Teams (length {l}) = {t}'.format(g=game, p=probabilities, t=possible_teams, l=len(possible_teams)))
 
         # choose winner of game
        # winner = np.random.choice(possible_teams, 2, p=probabilities)[0]
@@ -78,11 +76,10 @@ for i in range(10):
         if 0 not in bracket:
             full = True
 
-    print(bracket)
+
     bracket_frame = pd.DataFrame([bracket])
     #print(bracket_frame)
     brackets = brackets.append(bracket_frame)
-    print('')
-    time.sleep(1)
 
+print(brackets)
 print('done')
