@@ -6,7 +6,6 @@
       <change beforePath="" afterPath="$PROJECT_DIR$/hudsons_bracket.py" />
       <change beforePath="" afterPath="$PROJECT_DIR$/nicks_bracket.py" />
       <change beforePath="$PROJECT_DIR$/.idea/workspace.xml" afterPath="$PROJECT_DIR$/.idea/workspace.xml" />
-      <change beforePath="$PROJECT_DIR$/main.py" afterPath="$PROJECT_DIR$/main.py" />
     </list>
     <option name="EXCLUDED_CONVERTED_TO_IGNORED" value="true" />
     <option name="TRACKING_ENABLED" value="true" />
@@ -259,7 +258,14 @@
       <option name="project" value="LOCAL" />
       <updated>1518770259528</updated>
     </task>
-    <option name="localTasksCounter" value="2" />
+    <task id="LOCAL-00002" summary="Functions to get the score of user brackets">
+      <created>1518970552189</created>
+      <option name="number" value="00002" />
+      <option name="presentableId" value="LOCAL-00002" />
+      <option name="project" value="LOCAL" />
+      <updated>1518970552189</updated>
+    </task>
+    <option name="localTasksCounter" value="3" />
     <servers />
   </component>
   <component name="TodoView">
@@ -320,7 +326,8 @@
   </component>
   <component name="VcsManagerConfiguration">
     <MESSAGE value="Fixed magic number to pull correct teams" />
-    <option name="LAST_COMMIT_MESSAGE" value="Fixed magic number to pull correct teams" />
+    <MESSAGE value="Functions to get the score of user brackets" />
+    <option name="LAST_COMMIT_MESSAGE" value="Functions to get the score of user brackets" />
   </component>
   <component name="XDebuggerManager">
     <breakpoint-manager>
