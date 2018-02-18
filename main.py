@@ -40,7 +40,7 @@ round_wins_named = round_wins.set_index(team_names)
 
 brackets = pd.DataFrame()
 # loop that runs 10,000 iterations
-for i in range(10):
+for i in range(1):
 
 
     # loop that iterates through the empty games
@@ -83,3 +83,33 @@ for i in range(10):
 
 print(brackets)
 print('done')
+
+# ********Score user bracket**********
+
+def get_score(game):
+    if game == 0:
+        return 32
+    elif game <= 2:
+        return 16
+    elif game <= 6:
+        return 8
+    elif game <= 14:
+        return 4
+    elif game <= 30:
+        return 2
+    else:
+        return 1
+
+
+def user_bracket_score(espn_bracket, user_bracket):
+    score = 0
+    for i in range(0,len(espn_bracket)-1):
+        if espn_bracket[i] == user_bracket[i]:
+            game = i+1
+            score = score + get_score(game)
+
+    return score
+
+people = ["hudson", "nick"]
+from hudsons_bracket import hudsons_bracket
+from nicks_bracket import nicks_bracket
