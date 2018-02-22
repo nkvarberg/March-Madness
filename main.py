@@ -2,6 +2,7 @@
 
 import pandas as pd  # this is for data processing with dataframes
 import numpy as np   # this is for various number things like the random choice and the zeros array
+import operator
 import time
 from team_path_map import BracketMap    # this allows us to access the data in the other file
 
@@ -33,20 +34,45 @@ round_wins = round_wins_all[136: 200]
 team_names = all_forecast_data['team_name'][136:200]
 round_wins_named = round_wins.set_index(team_names)
 
+my_brackets = {'hudson': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Gonzaga', 'Gonzaga', 'Kansas', 'Villanova', 'Gonzaga', 'Kansas', 'UCLA', 'Villanova', 'Baylor', 'Gonzaga', 'Arizona', 'Kansas', 'Louisville', 'Minnesota', 'UCLA', 'Villanova', 'North Carolina-Wilmington', 'Baylor', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', 'Arizona', 'Kansas', 'Purdue', 'Oregon', 'Louisville', 'North Carolina', 'Minnesota', 'UCLA', 'Kentucky', 'Villanova', 'Virginia Tech', 'North Carolina-Wilmington', 'Florida', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Rhode Island', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Minnesota', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
+    'nick': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Florida', 'Florida', 'Kansas', 'Florida', 'Gonzaga', 'Kansas', 'North Carolina', 'Florida', 'Duke', 'Gonzaga', 'Florida State', 'Kansas', 'Louisville', 'North Carolina', 'Kentucky', 'Villanova', 'Florida', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', 'Arizona', 'Kansas', 'Iowa State', 'Creighton', 'Louisville', 'North Carolina', 'Butler', 'Cincinnati', 'Kentucky', 'Villanova', 'Wisconsin', 'North Carolina-Wilmington', 'Florida', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
+    'nate': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville', 'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State', 'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech', 'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland', 'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
+    'Dr. I': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville', 'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State', 'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech', 'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland', 'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
+    'Dr. Ryken': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Villanova', 'Villanova', 'Kansas', 'Villanova', 'Arizona', 'Kansas', 'Kentucky', 'Villanova', 'Southern Methodist', 'Vanderbilt', 'Arizona', 'Kansas', 'Louisville', 'Butler', 'Kentucky', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Vanderbilt', 'Notre Dame', 'Florida State', 'Arizona', 'Kansas', 'Nevada', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Kentucky', 'Villanova', 'Wisconsin', 'Virginia', 'Florida', 'Southern Methodist', 'Baylor', 'South Carolina', 'Duke', 'South Dakota State', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Nevada', 'Vermont', 'Rhode Island', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Minnesota', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])}}
+
+# ********Score user bracket**********
+def get_score(game):
+    if game == 0:
+        return 32
+    elif game <= 2:
+        return 16
+    elif game <= 6:
+        return 8
+    elif game <= 14:
+        return 4
+    elif game <= 30:
+        return 2
+    else:
+        return 1
 
 
-
+def user_bracket_score(espn_bracket, player_bracket):
+    states = espn_bracket == player_bracket
+    true_index = np.where(states)[0]
+    player_score = 0
+    for game in true_index:
+        player_score = player_score + get_score(game)
+    return player_score
 # ******** Algorithm ****************
 
 brackets = pd.DataFrame()
 # loop that runs 10,000 iterations
-for i in range(1):
+for i in range(100):
 
 
     # loop that iterates through the empty games
     # create empty bracket
     bracket = list(np.zeros(63))
-    print(bracket)
     full = False
     while not full:
         game = bracket.index(0) + 1 # because of zero indexing
@@ -63,7 +89,7 @@ for i in range(1):
         probabilities = list(round_wins_named['rd{}_win'.format(round)][possible_teams])
 
         # choose winner of game
-       # winner = np.random.choice(possible_teams, 2, p=probabilities)[0]
+        # winner = np.random.choice(possible_teams, 2, p=probabilities)[0]
         winner = weighted_choice(possible_teams, probabilities)
 
         # fill in upstream games with this winner
@@ -76,40 +102,18 @@ for i in range(1):
         if 0 not in bracket:
             full = True
 
+    # store scores of each player bracket in dictionary
+    for player in my_brackets:
+        player_score = user_bracket_score(bracket, my_brackets[player]['bracket'])
+        my_brackets[player]['score'] = player_score
+    #winner = max(my_brackets.items(), key=operator.itemgetter(1))[0] # Does this work if people are tied?
 
-    bracket_frame = pd.DataFrame([bracket])
-    #print(bracket_frame)
-    brackets = brackets.append(bracket_frame)
+    # Assign a win to the winner or tied winners in my_brackets
+    names_scores = {player: data['score'] for player, data in my_brackets.items()}
+    max_score = max(names_scores.values())
+    winners = [name for name in names_scores if names_scores[name] == max_score]
+    for winner in winners:
+        my_brackets[winner]['wins'] += 1
 
-print(brackets)
+
 print('done')
-
-# ********Score user bracket**********
-
-def get_score(game):
-    if game == 0:
-        return 32
-    elif game <= 2:
-        return 16
-    elif game <= 6:
-        return 8
-    elif game <= 14:
-        return 4
-    elif game <= 30:
-        return 2
-    else:
-        return 1
-
-
-def user_bracket_score(espn_bracket, user_bracket):
-    score = 0
-    for i in range(0,len(espn_bracket)-1):
-        if espn_bracket[i] == user_bracket[i]:
-            game = i+1
-            score = score + get_score(game)
-
-    return score
-
-people = ["hudson", "nick"]
-from hudsons_bracket import hudsons_bracket
-from nicks_bracket import nicks_bracket
