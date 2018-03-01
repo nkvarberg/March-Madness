@@ -2,8 +2,7 @@
 
 import pandas as pd  # this is for data processing with dataframes
 import numpy as np   # this is for various number things like the random choice and the zeros array
-import operator
-import time
+import datetime
 from team_path_map import BracketMap    # this allows us to access the data in the other file
 
 
@@ -29,16 +28,37 @@ path_data = BracketMap()
 
 # load the data and take only the columns we need.
 all_forecast_data = pd.read_csv('./fivethirtyeight_ncaa_forecasts.csv')
-round_wins_all = all_forecast_data[['rd1_win', 'rd2_win', 'rd3_win', 'rd4_win', 'rd5_win', 'rd6_win', 'rd7_win']]
-round_wins = round_wins_all[136: 200]
-team_names = all_forecast_data['team_name'][136:200]
-round_wins_named = round_wins.set_index(team_names)
+date = "2017-03-15"
+#date = datetime.datetime.now().strftime("%Y-%m-%d")
 
-my_brackets = {'hudson': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Gonzaga', 'Gonzaga', 'Kansas', 'Villanova', 'Gonzaga', 'Kansas', 'UCLA', 'Villanova', 'Baylor', 'Gonzaga', 'Arizona', 'Kansas', 'Louisville', 'Minnesota', 'UCLA', 'Villanova', 'North Carolina-Wilmington', 'Baylor', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', 'Arizona', 'Kansas', 'Purdue', 'Oregon', 'Louisville', 'North Carolina', 'Minnesota', 'UCLA', 'Kentucky', 'Villanova', 'Virginia Tech', 'North Carolina-Wilmington', 'Florida', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Rhode Island', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Minnesota', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
-    'nick': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Florida', 'Florida', 'Kansas', 'Florida', 'Gonzaga', 'Kansas', 'North Carolina', 'Florida', 'Duke', 'Gonzaga', 'Florida State', 'Kansas', 'Louisville', 'North Carolina', 'Kentucky', 'Villanova', 'Florida', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', 'Arizona', 'Kansas', 'Iowa State', 'Creighton', 'Louisville', 'North Carolina', 'Butler', 'Cincinnati', 'Kentucky', 'Villanova', 'Wisconsin', 'North Carolina-Wilmington', 'Florida', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
-    'nate': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville', 'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State', 'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech', 'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland', 'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
-    'Dr. I': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville', 'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State', 'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech', 'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland', 'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])},
-    'Dr. Ryken': {'score': 0, 'wins': 0, 'bracket': pd.DataFrame(['Villanova', 'Villanova', 'Kansas', 'Villanova', 'Arizona', 'Kansas', 'Kentucky', 'Villanova', 'Southern Methodist', 'Vanderbilt', 'Arizona', 'Kansas', 'Louisville', 'Butler', 'Kentucky', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Vanderbilt', 'Notre Dame', 'Florida State', 'Arizona', 'Kansas', 'Nevada', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Kentucky', 'Villanova', 'Wisconsin', 'Virginia', 'Florida', 'Southern Methodist', 'Baylor', 'South Carolina', 'Duke', 'South Dakota State', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Nevada', 'Vermont', 'Rhode Island', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Minnesota', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'])}}
+gender = "mens"
+correct_date_gender_data = all_forecast_data[all_forecast_data['forecast_date'].str.match(date) & all_forecast_data['gender'].str.match(gender) & (all_forecast_data['rd1_win'] !=0)]
+round_wins = correct_date_gender_data[['rd1_win', 'rd2_win', 'rd3_win', 'rd4_win', 'rd5_win', 'rd6_win', 'rd7_win']]
+round_wins_named = round_wins.set_index(correct_date_gender_data['team_name'])
+
+my_brackets = pd.DataFrame({'hudson':  ['Gonzaga', 'Gonzaga', 'Kansas', 'Villanova', 'Gonzaga', 'Kansas', 'UCLA', 'Villanova', 'Baylor', 'Gonzaga', 'Arizona', 'Kansas', 'Louisville', 'Minnesota', 'UCLA', 'Villanova', 'North Carolina-Wilmington', 'Baylor', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', 'Arizona', 'Kansas', 'Purdue', 'Oregon', 'Louisville', 'North Carolina', 'Minnesota', 'UCLA', 'Kentucky', 'Villanova', 'Virginia Tech', 'North Carolina-Wilmington', 'Florida', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Rhode Island', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Minnesota', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'],
+               'nick':  ['Florida', 'Florida', 'Kansas', 'Florida', 'Gonzaga', 'Kansas', 'North Carolina', 'Florida', 'Duke', 'Gonzaga', 'Florida State', 'Kansas', 'Louisville', 'North Carolina', 'Kentucky', 'Villanova', 'Florida', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', 'Arizona', 'Kansas', 'Iowa State', 'Creighton', 'Louisville', 'North Carolina', 'Butler', 'Cincinnati', 'Kentucky', 'Villanova', 'Wisconsin', 'North Carolina-Wilmington', 'Florida', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'],
+                            'snate': ['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville',
+                                     'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State',
+                                     'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia',
+                                     'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State',
+                                     "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville',
+                                     'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech',
+                                     'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette',
+                                     'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland',
+                                     'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)',
+                                     'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville',
+                                     'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA',
+                                     'Wichita State', 'Kentucky'],
+
+                            'nate':  ['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville', 'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State', 'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech', 'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland', 'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'],
+               'Dr. I':  ['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville', 'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State', 'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech', 'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland', 'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky'],
+               'Dr. Ryken': ['Villanova', 'Villanova', 'Kansas', 'Villanova', 'Arizona', 'Kansas', 'Kentucky', 'Villanova', 'Southern Methodist', 'Vanderbilt', 'Arizona', 'Kansas', 'Louisville', 'Butler', 'Kentucky', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Vanderbilt', 'Notre Dame', 'Florida State', 'Arizona', 'Kansas', 'Nevada', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Kentucky', 'Villanova', 'Wisconsin', 'Virginia', 'Florida', 'Southern Methodist', 'Baylor', 'South Carolina', 'Duke', 'South Dakota State', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Xavier', 'Florida State', 'Virginia Commonwealth', 'Arizona', 'Kansas', 'Miami (FL)', 'Nevada', 'Vermont', 'Rhode Island', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Minnesota', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky']})
+
+results = pd.DataFrame(index=['total_points', 'wins', 'average_score', 'win_perc'], columns=my_brackets.columns)
+results = results.fillna(0)
+
+num_sims = 1000
 
 # ********Score user bracket**********
 def get_score(game):
@@ -63,11 +83,13 @@ def user_bracket_score(espn_bracket, player_bracket):
     for game in true_index:
         player_score = player_score + get_score(game)
     return player_score
+
+
 # ******** Algorithm ****************
 
 brackets = pd.DataFrame()
 # loop that runs 10,000 iterations
-for i in range(100):
+for i in range(num_sims):
 
 
     # loop that iterates through the empty games
@@ -99,21 +121,27 @@ for i in range(100):
                 bracket[gam-1] = winner
 
         # decide whether or not the bracket is full
-        if 0 not in bracket:
-            full = True
+        full = 0 not in bracket
 
-    # store scores of each player bracket in dictionary
+
+    # score each player for the current bracket
+    player_score = {player: user_bracket_score(bracket, my_brackets[player]) for player in my_brackets}
+
+    # add player score of to each player's total score
     for player in my_brackets:
-        player_score = user_bracket_score(bracket, my_brackets[player]['bracket'])
-        my_brackets[player]['score'] = player_score
-    #winner = max(my_brackets.items(), key=operator.itemgetter(1))[0] # Does this work if people are tied?
+        results[player]['total_points'] += player_score[player]
 
     # Assign a win to the winner or tied winners in my_brackets
-    names_scores = {player: data['score'] for player, data in my_brackets.items()}
-    max_score = max(names_scores.values())
-    winners = [name for name in names_scores if names_scores[name] == max_score]
-    for winner in winners:
-        my_brackets[winner]['wins'] += 1
+    for player in my_brackets:
+        if player_score[player] == max(player_score.values()):
+            results[player]['wins'] += 1
+
+
+# ******** Post Processing ****************
+for player in results:
+    results[player]['average_score'] = float(results[player]['total_points'])/num_sims
+    results[player]['win_perc'] = float(results[player]['wins'])/num_sims * 100
+
 
 
 print('done')
