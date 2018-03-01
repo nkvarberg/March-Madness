@@ -110,6 +110,20 @@ def user_bracket_score(espn_bracket, user_bracket):
 
     return score
 
+#
 people = ["hudson", "nick"]
 from hudsons_bracket import hudsons_bracket
 from nicks_bracket import nicks_bracket
+
+
+
+espn_bracket = ['Duke', 'Duke', 'Louisville', 'Duke', "Saint Mary's (CA)", 'Louisville', 'Wichita State', 'Villanova', 'Duke', 'Gonzaga', "Saint Mary's (CA)", 'Iowa State', 'Louisville', 'North Carolina', 'Wichita State', 'Villanova', 'Virginia', 'Southern Methodist', 'Duke', 'Gonzaga', 'West Virginia', 'Florida State', "Saint Mary's (CA)", 'Kansas', 'Iowa State', 'Oregon', 'Louisville', 'North Carolina', 'Butler', 'UCLA', 'Wichita State', 'Villanova', 'Virginia Tech', 'Virginia', 'East Tennessee State', 'Southern Methodist', 'Baylor', 'Marquette', 'Duke', 'Gonzaga', 'Vanderbilt', 'Notre Dame', 'West Virginia', 'Maryland', 'Florida State', "Saint Mary's (CA)", 'Arizona', 'Kansas', 'Miami (FL)', 'Iowa State', 'Purdue', 'Creighton', 'Oregon', 'Michigan', 'Louisville', 'North Carolina', 'Arkansas', 'Middle Tennessee', 'Butler', 'Cincinnati', 'UCLA', 'Wichita State', 'Kentucky']
+
+for j in range (0,iterations):
+    score = 0
+    for i in range(0,63):
+        if espn_bracket[i] == brackets.iloc[i,j]:
+            game = i
+            score = score + get_score(game)
+    print('Player earned a score of')
+
