@@ -97,12 +97,6 @@ class BracketMap:
 
 
 
-    def fun(self, a, b):
-        '''
-        @:param a:
-        :return:
-        '''
-
 
 
 
