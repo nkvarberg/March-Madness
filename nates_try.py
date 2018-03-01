@@ -53,7 +53,7 @@ round_wins_named = round_wins.set_index(team_names)
 
 brackets = pd.DataFrame()
 # loop that runs 10,000 iterations
-iterations = 10
+iterations = 100
 for i in range(iterations):
 
 
@@ -116,8 +116,12 @@ user_brackets= pd.DataFrame(y_brackets)#Convert the dictionary to a dataframe
 
 user_names = list(user_brackets)#Make a list that contains the name of each player
 
-kmax = len(user_brackets.columns) #Need the minus one because of zero indexing
+kmax = len(user_brackets.columns) #number of users
 
+bracket_scores = pd.DataFrame(index= np.arange(iterations), columns=user_names)#Initializing a data frame to fill with user's scores
+#K is the user bracket number
+#J is the simulated bracket number
+#I is the game number
 for k in range (0,kmax): #Iterate through each person's bracket one at a time
     for j in range (0,iterations): #Iterate through each simulated bracket one at a time
         score = 0
@@ -125,9 +129,19 @@ for k in range (0,kmax): #Iterate through each person's bracket one at a time
             if user_brackets.iloc[i, k] == brackets.iloc[j, i]:
                 game = i
                 score = score + get_score(game)
-#Need to store each users score in a DataFrame with the other users.
 
-#Then, for each of the simulated brackets, you need to see who got the highest score
-#Whoever scored highest gets a win (tie means two winners)
+        bracket_scores.iloc[j, k] = score #Need to store each users score in a DataFrame with the other users.
+
+#bracket_scores['Max'] = bracket_scores.idxmax(axis=1) #Add a column onto the data frame that shows who had the highest score for that bracket
+
+num_of_wins = pd.DataFrame(index=['wins'], columns=user_names) #Make a dataframe to store how many times each person won
+
+
+for k in range (0,kmax): #Iterate through each person's bracket one at a time
+    wins = 0
+    for j in range (0,iterations): #Iterate through each simulated bracket one at a time
+        if bracket_scores.iloc[j,k] == bracket_scores.iloc[j].max():
+            wins = wins + 1
+    num_of_wins[user_names[k]] = wins
 #Count up number of wins for each person, divide by iterations and you have the probability of them winning
 
